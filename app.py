@@ -4,9 +4,11 @@ from flask_marshmallow import Marshmallow
 import configparser
 import markdown
 import os
-from models import Device
+from models import Device, User
+from models.DB import db, ma
 
 app = Flask(__name__)
+
 
 # Lê o diretório do arquivo atual
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -24,13 +26,8 @@ port = int(config['DATABASE']['port'])
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql://{user}:{passwd}@{host}:{port}/{dbc}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Instância do banco de dados
-db = SQLAlchemy(app)
-
-# Instancia do serializador Marshmallow
-ma = Marshmallow(app)
-
-
+db.init_app(app)
+ma.init_app(app)
 """Definindo as rotas"""
 
 """O index além do login será única parte visual da API(Mostrando a documentação)"""
@@ -53,6 +50,12 @@ def get_devices():
     devices = Device.Device.query.all()
     result = Device.devices_schema.dump(devices)
     return jsonify(result.data)
+
+
+@app.route('/device/<id>', methods=['GET'])
+def get_device(id):
+    device = Device.Device.query.get(id)
+    return Device.device_schema.jsonify(device)
 
 
 @app.route('/device', methods=['POST'])
@@ -96,9 +99,58 @@ def delete_device(id):
 """Rotas para usuário"""
 
 
+@app.route('/user', methods=['GET'])
+def get_users():
+    users = User.User.query.all()
+    result = User.users_schema.dump(users)
+    return jsonify(result.data)
 
 
+@app.route('/user/<id>', methods=['GET'])
+def get_user(id):
+    user = User.User.query.get(id)
+    return User.user_schema.jsonify(user)
 
+
+@app.route('/user', methods=['POST'])
+def post_user():
+    username = request.json['username']
+    password = request.json['password']
+    name = request.json['name']
+    email = request.json['email']
+
+    userr = User.User(username, password, name, email)
+    db.session.add(userr)
+    db.session.commit()
+
+    return User.user_schema.jsonify(userr)
+
+
+@app.route('/user/<id>', methods=['PUT'])
+def update_user(id):
+    userr = User.User.query.get(id)
+    username = request.json['username']
+    password = request.json['password']
+    name = request.json['name']
+    email = request.json['email']
+
+    userr.username = username
+    userr.password = password
+    userr.name = name
+    userr.email = email
+
+    db.session.commit()
+
+    return User.user_schema.jsonify(user)
+
+
+@app.route('/user/<id>', methods=['DELETE'])
+def delete_user(id):
+    userr = User.User.query.get(id)
+    db.session.delete(userr)
+    db.session.commit()
+
+    return User.user_schema.jsonify(userr)
 
 
 

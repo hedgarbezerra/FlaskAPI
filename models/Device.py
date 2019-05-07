@@ -1,4 +1,8 @@
-from app import db, ma
+# Instância do banco de dados
+from flask_marshmallow import Marshmallow
+from flask_sqlalchemy import SQLAlchemy
+from models.DB import db, ma
+
 
 """Importando do arquivo db as variáveis criadas para conexão e serialização do banco"""
 
@@ -21,4 +25,4 @@ class DeviceSchema(ma.Schema):
 
 
 device_schema = DeviceSchema(strict=True)
-devices_schema = DeviceSchema(strict=True, many=True)
+devices_schema = DeviceSchema(many=True)
