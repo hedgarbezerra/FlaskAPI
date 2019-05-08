@@ -1,7 +1,4 @@
-# Instância do banco de dados
-from flask_marshmallow import Marshmallow
-from flask_sqlalchemy import SQLAlchemy
-from models.DB import db, ma
+from Models.DB import db, ma
 
 
 """Importando do arquivo db as variáveis criadas para conexão e serialização do banco"""

@@ -1,19 +1,19 @@
-from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
 import configparser
-import markdown
 import os
-from models import Device, User
-from models.DB import db, ma
+
+import markdown
+from flask import Flask, request, redirect, url_for
+
+from Models.DB import db, ma
+from Views import DevicesView, UsersView
 
 app = Flask(__name__)
-
+# TODO: event handlers e autenticação JWT
 
 # Lê o diretório do arquivo atual
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-# Ler as configurações de rota do banco de um arquivo
+# Ler as configurações do banco de um arquivo
 config = configparser.ConfigParser()
 config.read(f'{basedir}/config.ini')
 user = config['DATABASE']['user']
@@ -25,135 +25,104 @@ port = int(config['DATABASE']['port'])
 # Definições do banco de dados
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql://{user}:{passwd}@{host}:{port}/{dbc}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 db.init_app(app)
 ma.init_app(app)
+
 """Definindo as rotas"""
 
 """O index além do login será única parte visual da API(Mostrando a documentação)"""
 
 
-@app.route('/', methods=['GET'])
+@app.route('/v1/', methods=['GET'])
 def index():
     # Usa o os para abrir o arquivo README diretamente da raiz do projeto a partir da basedir
-    with open(basedir + '/README.md', 'r') as readme:
+    with open(basedir + '/README.md', 'r', encoding='utf-8') as readme:
         content = readme.read()
         # O markdown converte para HTML
         return markdown.markdown(content)
 
 
+@app.route('/', methods=['GET'])
+def index_redirect():
+    return redirect(url_for('index')), 301
+
+
 """Criando o CRUD dos dispositivos(devices)"""
 
 
-@app.route('/device', methods=['GET'])
+@app.route('/v1/devices', methods=['GET'])
 def get_devices():
-    devices = Device.Device.query.all()
-    result = Device.devices_schema.dump(devices)
-    return jsonify(result.data)
+    return DevicesView.get_devices()
 
 
-@app.route('/device/<id>', methods=['GET'])
+@app.route('/v1/devices/<id>', methods=['GET'])
 def get_device(id):
-    device = Device.Device.query.get(id)
-    return Device.device_schema.jsonify(device)
+    return DevicesView.get_device(id)
 
 
-@app.route('/device', methods=['POST'])
+@app.route('/v1/devices', methods=['POST'])
 def post_device():
     name = request.json['name']
     desc = request.json['desc']
     gateway = request.json['gateway']
 
-    device = Device.Device(name, desc, gateway)
-    db.session.add(device)
-    db.session.commit()
-
-    return Device.device_schema.jsonify(device)
+    return DevicesView.post_device(name, desc, gateway)
 
 
-@app.route('/device/<id>', methods=['PUT'])
+@app.route('/v1/devices/<id>', methods=['PUT'])
 def update_device(id):
-    device = Device.Device.query.get(id)
     name = request.json['name']
     desc = request.json['desc']
     gateway = request.json['gateway']
 
-    device.name = name
-    device.desc = desc
-    device.gateway = gateway
-
-    db.session.commit()
-
-    return Device.device_schema.jsonify(device)
+    data = DevicesView.update_device(id, name, desc, gateway)
+    return data
 
 
-@app.route('/device/<id>', methods=['DELETE'])
+@app.route('/v1/devices/<id>', methods=['DELETE'])
 def delete_device(id):
-    device = Device.Device.query.get(id)
-    db.session.delete(device)
-    db.session.commit()
-
-    return Device.device_schema.jsonify(device)
+    data = DevicesView.delete_device(id)
+    return data
 
 
 """Rotas para usuário"""
 
 
-@app.route('/user', methods=['GET'])
+@app.route('/v1/users', methods=['GET'])
 def get_users():
-    users = User.User.query.all()
-    result = User.users_schema.dump(users)
-    return jsonify(result.data)
+    return UsersView.get_users()
 
 
-@app.route('/user/<id>', methods=['GET'])
+@app.route('/v1/users/<id>', methods=['GET'])
 def get_user(id):
-    user = User.User.query.get(id)
-    return User.user_schema.jsonify(user)
+    return UsersView.get_user(id)
 
 
-@app.route('/user', methods=['POST'])
+@app.route('/v1/users', methods=['POST'])
 def post_user():
     username = request.json['username']
     password = request.json['password']
     name = request.json['name']
     email = request.json['email']
 
-    userr = User.User(username, password, name, email)
-    db.session.add(userr)
-    db.session.commit()
-
-    return User.user_schema.jsonify(userr)
+    return UsersView.post_user(username, password, name, email)
 
 
-@app.route('/user/<id>', methods=['PUT'])
+@app.route('/v1/users/<id>', methods=['PUT'])
 def update_user(id):
-    userr = User.User.query.get(id)
     username = request.json['username']
     password = request.json['password']
     name = request.json['name']
     email = request.json['email']
 
-    userr.username = username
-    userr.password = password
-    userr.name = name
-    userr.email = email
-
-    db.session.commit()
-
-    return User.user_schema.jsonify(user)
+    return UsersView.update_user(id, username, password, name, email)
 
 
-@app.route('/user/<id>', methods=['DELETE'])
+@app.route('/v1/users/<id>', methods=['DELETE'])
 def delete_user(id):
-    userr = User.User.query.get(id)
-    db.session.delete(userr)
-    db.session.commit()
-
-    return User.user_schema.jsonify(userr)
-
-
+    return UsersView.delete_user(id)
 
 
 if __name__ == '__main__':
-    app.run()
+
+    app.run(debug=True)

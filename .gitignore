@@ -101,9 +101,8 @@ venv.bak/
 
 # mkdocs documentation
 /site
-/models/Users.py
+/Models/Users.py
 # mypy
 .mypy_cache/
 testing.py
-/repository
 .idea/
