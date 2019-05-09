@@ -1,5 +1,5 @@
-from sqlalchemy import func
 from Models.DB import db, ma
+from sqlalchemy import func
 from sqlalchemy import func
 
 from Models.DB import db, ma
@@ -29,5 +29,3 @@ class UserSchema(ma.Schema):
 
 user_schema = UserSchema(strict=True)
 users_schema = UserSchema(strict=True, many=True)
-
-db.create_all()
