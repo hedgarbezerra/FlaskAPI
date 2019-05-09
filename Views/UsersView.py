@@ -1,6 +1,5 @@
 from flask import jsonify
 from werkzeug import security
-
 from Models import User
 from app import db
 

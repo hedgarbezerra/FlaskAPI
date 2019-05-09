@@ -4,7 +4,6 @@ import os
 import random
 import string
 from functools import wraps
-
 import jwt
 import markdown
 from flask import Flask, request, redirect, url_for, jsonify

@@ -1,5 +1,4 @@
 from flask import jsonify
-
 from Models import Device
 from app import db
 

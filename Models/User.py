@@ -1,8 +1,6 @@
 from Models.DB import db, ma
 from sqlalchemy import func
-from sqlalchemy import func
 
-from Models.DB import db, ma
 
 """Importando do arquivo db as variáveis criadas para conexão e serialização do banco"""
 
