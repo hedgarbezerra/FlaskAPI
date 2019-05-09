@@ -105,4 +105,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 testing.py
+IGAPI.py
+testing02.py
 .idea/

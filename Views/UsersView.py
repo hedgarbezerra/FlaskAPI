@@ -1,4 +1,5 @@
 from flask import jsonify
+from werkzeug import security
 
 from Models import User
 from app import db
@@ -28,15 +29,15 @@ def post_user(username, password, name, email):
     password = password
     name = name
     email = email
-    user = User.User(username, password, name, email)
-
+    pass_hash = security.generate_password_hash(password)
+    user = User.User(username, pass_hash, name, email)
     try:
         db.session.add(user)
         db.session.commit()
-        return User.user_schema.jsonify(user)
+        return User.user_schema.jsonify(user), 201
 
-    except RuntimeError:
-        return jsonify({'message': 'unable to create'})
+    except:
+        return jsonify({'message': 'unable to create', 'data':{}}), 500
 
 
 def update_user(id, username, password, name, email):
@@ -45,17 +46,18 @@ def update_user(id, username, password, name, email):
     password = password
     name = name
     email = email
+    pass_hash = security.generate_password_hash(password)
 
     if user:
         user.username = username
-        user.password = password
+        user.password = pass_hash
         user.name = name
         user.email = email
         db.session.commit()
         return User.user_schema.jsonify(user)
 
     else:
-        return jsonify({'message': 'unable to update'})
+        return jsonify({'message': 'unable to update', 'data':{}}), 400
 
 
 def delete_user(id):
@@ -64,7 +66,14 @@ def delete_user(id):
     if user:
         db.session.delete(user)
         db.session.commit()
-        return User.user_schema.jsonify(user)
+        return User.user_schema.jsonify(user), 202
 
     else:
-        return jsonify({'message': 'unable to delete'})
+        return jsonify({'message': 'unable to delete', 'data':{}}), 400
+
+def user_by_username(username):
+    user = User.User.query.filter(User.User.username == username).one()
+    return user
+
+# employee = session.query(db.Employee).filter(db.Employee.cpf == employee_cpf).one()
+

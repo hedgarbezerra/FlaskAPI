@@ -1,14 +1,19 @@
 import configparser
+import datetime
 import os
+import random
+import string
+from functools import wraps
 
+import jwt
 import markdown
-from flask import Flask, request, redirect, url_for
+from flask import Flask, request, redirect, url_for, jsonify
+from werkzeug.security import check_password_hash
 
 from Models.DB import db, ma
 from Views import DevicesView, UsersView
 
 app = Flask(__name__)
-# TODO: event handlers e autenticação JWT
 
 # Lê o diretório do arquivo atual
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -22,13 +27,48 @@ dbc = config['DATABASE']['db']
 host = config['DATABASE']['host']
 port = int(config['DATABASE']['port'])
 
-# Definições do banco de dados
+gen = string.ascii_letters + string.digits + string.ascii_uppercase
+key = ''.join(random.choice(gen) for i in range(12))
+
+# Definições do banco de dados e app
 app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql://{user}:{passwd}@{host}:{port}/{dbc}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = key
 db.init_app(app)
 ma.init_app(app)
 
-"""Definindo as rotas"""
+"""Fazendo a autenticação com JWT e o servidor"""
+
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.args.get('token') # http://localhost:5000/v1/users?token=8Y3873UJWEQ98UY3U
+
+        if not token:
+            return jsonify({'message': 'token is missing'})
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'])
+        except:
+            return jsonify({'message': 'token is invalid'})
+        return f(*args, **kwargs)
+    return decorated
+
+
+
+# Gerando token com base na Secret key do app e definindo expiração com 'exp'
+
+@app.route('/v1/login', methods=['GET', 'POST'])
+def login():
+    # TODO: Work on the authentication of login to get the token
+    auth = request.authorization
+    user = UsersView.user_by_username(auth.username)
+    if auth and check_password_hash(user.password, auth.password):
+        token = jwt.encode({'username': auth.username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(seconds=12)},
+                           app.config['SECRET_KEY'])
+        return jsonify({'token': token.decode('UTF-8')})
+    return jsonify({'message': 'could not verify', 'WWW-Authenticate': 'Basic real="Login Required"'})
+
 
 """O index além do login será única parte visual da API(Mostrando a documentação)"""
 
@@ -47,7 +87,7 @@ def index_redirect():
     return redirect(url_for('index')), 301
 
 
-"""Criando o CRUD dos dispositivos(devices)"""
+"""Rotas dos dispositivos(devices)"""
 
 
 @app.route('/v1/devices', methods=['GET'])
