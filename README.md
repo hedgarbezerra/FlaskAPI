@@ -7,7 +7,7 @@
 
 **Definição/Request**
 
-`GET /device`
+`GET /v2/devices?token=TOKEN`
 
 **Response**
 
@@ -34,7 +34,7 @@
 
 **Definição/Request**
 
-`POST /device`
+`POST /v2/devices?token=`
 
 **Argumentos**
 
@@ -57,7 +57,7 @@
 
 ## Retornar um dispositivo especifico
 
-`GET /device/<id>`
+`GET /v2/devices/<id>?token=TOKEN`
 
 **Response**
 
@@ -73,16 +73,40 @@
 }
 ```
 
+
+## Atualizar um dispositivo especifico
+
+`PUT /v2/devices/<id>?token=TOKEN`
+
+**Argumentos**
+
+- `"name":string` um nome simples
+- `"desc":string` descrição do dispositivo
+- `"gateway":string` o IP local ou Global do controllador do dispositivo(Arduino)
+
+**Response**
+
+- `201 Created` ao ter sucesso
+
+```json
+{
+    "id": 1,
+    "name": "Lampada da cozinha",
+    "desc": "Switch que conecta a lampada à rede",
+    "gateway": "192.1.68.0.2"
+}
+```
+
 ## Deletar dispositivo
 
-**Definition**
+**Definição**
 
-`DELETE /device/<id>`
+`DELETE /v2/devices/<id>?token=TOKEN`
 
 **Response**
 
 - `404 Not Found` caso não exista
-- `204 No Content` ao ter sucesso
+- `202 No Content` ao ter sucesso
 
 
 
@@ -93,7 +117,7 @@
 
 **Definição/Request**
 
-`GET /user`
+`GET /v2/users`
 
 **Response**
 
@@ -119,7 +143,7 @@
 
 **Definição/Request**
 
-`POST /user`
+`POST /v2/users`
 
 **Argumentos**
 
@@ -134,16 +158,17 @@
 
 ```json
 {
-        "username": "hedgar11",
-        "password": "jijioqwoiw",
-        "name": "Hedgar Bezerra",
-        "email": "uqwehuewqh@gmail.com"
+    "email": "ad22qw2@gmail.com",
+    "id": 3,
+    "name": "Hedgar Bezerra",
+    "password": "pbkdf2:sha256:150000$NFfLWADt$a59e50fcef4d4e8a11db276ba43fd9df8d622620cf5ff1e1e0cff0216acc0cbf",
+    "username": "hed1"
 }
 ```
 
 ## Retornar um usuário especifico
 
-`GET /user/<id>`
+`GET /v2/users/<id>`
 
 **Response**
 
@@ -152,23 +177,51 @@
 
 ```json
 {
-        "username": "hedgar11",
-        "password": "jijioqwoiw",
-        "name": "Hedgar Bezerra",
-        "email": "uqwehuewqh@gmail.com"
+    "email": "ad22qw2@gmail.com",
+    "id": 3,
+    "name": "Hedgar Bezerra",
+    "password": "pbkdf2:sha256:150000$NFfLWADt$a59e50fcef4d4e8a11db276ba43fd9df8d622620cf5ff1e1e0cff0216acc0cbf",
+    "username": "hed1"
+}
+```
+
+### Atualizando usuário
+
+**Definição/Request**
+
+`PUT /v2/users`
+
+**Argumentos**
+
+- `"username":string` usuário que será mostrado e feito para usar a api(eventualmente)
+- `"password":string` senha que será encriptada antes de ir para o banco(eventualmente)
+- `"name":string` nome do usuário
+- `"email":string` email que será usado para comunicação(caso necessário)
+
+**Response**
+
+- `201 Created` ao ter sucesso
+
+```json
+{
+    "email": "ad22qw2@gmail.com",
+    "id": 3,
+    "name": "Hedgar Bezerra",
+    "password": "pbkdf2:sha256:150000$NFfLWADt$a59e50fcef4d4e8a11db276ba43fd9df8d622620cf5ff1e1e0cff0216acc0cbf",
+    "username": "hed1"
 }
 ```
 
 ## Deletar usuário
 
-**Definition**
+**Definição**
 
-`DELETE /user/<id>`
+`DELETE /v2/users/<id>`
 
 **Response**
 
 - `404 Not Found` caso não exista
-- `204 No Content` ao ter sucesso
+- `202 No Content` ao ter sucesso
 
 ```json
 {
@@ -176,5 +229,26 @@
         "password": "jijioqwoiw",
         "name": "Hedgar Bezerra",
         "email": "uqwehuewqh@gmail.com"
+}
+```
+## Autenticação por token com servidor JWT
+
+`POST /login`
+
+```json
+{
+        "username": "hedgar11",
+        "password": "jijioqwoiw"
+}
+```
+
+**Response**
+
+- `401 Not Found` caso não exista
+- `200 OK` ao ter sucesso
+
+```json
+{
+"token": "QIHWEUkoqwe8291j1ioe2j12jjw9218"
 }
 ```

@@ -10,7 +10,7 @@ def get_users():
 
     if users:
         result = User.users_schema.dump(users)
-        return jsonify({'data': result.data, 'message': 'Success'}), 200
+        return jsonify({'message': 'success', 'data': result.data}), 200
 
     return jsonify({'message': 'nothing found', 'data': {}})
 
@@ -25,6 +25,9 @@ def get_user(id):
 
 
 def post_user(username, password, name, email):
+    if user_by_username(username):
+        return jsonify({'message': 'user already existir'})
+
     username = username
     password = password
     name = name
@@ -57,7 +60,7 @@ def update_user(id, username, password, name, email):
         return User.user_schema.jsonify(user)
 
     else:
-        return jsonify({'message': 'unable to update', 'data':{}}), 400
+        return jsonify({'message': 'unable to update', 'data':{}})
 
 
 def delete_user(id):
@@ -69,11 +72,13 @@ def delete_user(id):
         return User.user_schema.jsonify(user), 202
 
     else:
-        return jsonify({'message': 'unable to delete', 'data':{}}), 400
+        return jsonify({'message': 'unable to delete', 'data':{}}), 404
 
 def user_by_username(username):
-    user = User.User.query.filter(User.User.username == username).one()
-    return user
+    try:
+        return User.User.query.filter(User.User.username == username).one()
 
+    except:
+        return None
 # employee = session.query(db.Employee).filter(db.Employee.cpf == employee_cpf).one()
 

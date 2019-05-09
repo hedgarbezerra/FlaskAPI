@@ -9,7 +9,7 @@ def get_devices():
 
     if devices:
         result = Device.devices_schema.dump(devices)
-        return jsonify({'message': 'Success', 'data': result.data})
+        return jsonify({'message': 'success', 'data': result.data})
 
     return jsonify({'message': 'nothing found', 'data': {}})
 
@@ -34,8 +34,8 @@ def post_device(name, desc, gateway):
         db.session.commit()
 
         return Device.device_schema.jsonify(device), 201
-    except RuntimeError:
-        return jsonify({"message": "unable to register device", 'data':{}}), 500
+    except:
+        return jsonify({"message": "unable to register device", 'data': {}}), 500
 
 
 def update_device(id, name, desc, gateway):
@@ -52,7 +52,7 @@ def update_device(id, name, desc, gateway):
         return Device.device_schema.jsonify(device)
 
     else:
-        return jsonify({'message': 'unable to update', 'data':{}}), 400
+        return jsonify({'message': 'unable to update', 'data': {}})
 
 
 def delete_device(id):
@@ -64,4 +64,4 @@ def delete_device(id):
         return Device.device_schema.jsonify(device), 202
 
     else:
-        return jsonify({"message": "unable to register device", 'data':{}}), 400
+        return jsonify({"message": "unable to register device", 'data': {}}), 404

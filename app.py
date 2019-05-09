@@ -64,20 +64,21 @@ def login():
     username = request.json['username']
     password = request.json['password']
     user = UsersView.user_by_username(username)
+    if not user:
+        return jsonify({'message': 'user not found'})
 
     if user and check_password_hash(user.password, password):
-        token = jwt.encode({'username': username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=5)},
+        token = jwt.encode({'username': username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=12)},
                            app.config['SECRET_KEY'])
         return jsonify({'token': token.decode('UTF-8')})
 
-    return jsonify({'message': 'could not verify', 'WWW-Authenticate': 'Basic real="Login Required"'})
+    return jsonify({'message': 'could not verify'}), 401
 
 
 """O index além do login será única parte visual da API(Mostrando a documentação)"""
 
 
 @app.route('/v2/', methods=['GET'])
-@token_required
 def index():
     # Usa o os para abrir o arquivo README diretamente da raiz do projeto a partir da basedir
     with open(basedir + '/README.md', 'r', encoding='utf-8') as readme:
@@ -95,16 +96,19 @@ def index_redirect():
 
 
 @app.route('/v2/devices', methods=['GET'])
+@token_required
 def get_devices():
     return DevicesView.get_devices()
 
 
 @app.route('/v2/devices/<id>', methods=['GET'])
+@token_required
 def get_device(id):
     return DevicesView.get_device(id)
 
 
 @app.route('/v2/devices', methods=['POST'])
+@token_required
 def post_device():
     name = request.json['name']
     desc = request.json['desc']
@@ -114,6 +118,7 @@ def post_device():
 
 
 @app.route('/v2/devices/<id>', methods=['PUT'])
+@token_required
 def update_device(id):
     name = request.json['name']
     desc = request.json['desc']
@@ -124,6 +129,7 @@ def update_device(id):
 
 
 @app.route('/v2/devices/<id>', methods=['DELETE'])
+@token_required
 def delete_device(id):
     data = DevicesView.delete_device(id)
     return data
