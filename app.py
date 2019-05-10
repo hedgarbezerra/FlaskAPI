@@ -8,7 +8,6 @@ import jwt
 import markdown
 from flask import Flask, request, redirect, url_for, jsonify
 from werkzeug.security import check_password_hash
-
 from Models.DB import db, ma
 from Views import DevicesView, UsersView
 
@@ -25,7 +24,6 @@ passwd = config['DATABASE']['passwd']
 dbc = config['DATABASE']['db']
 host = config['DATABASE']['host']
 port = int(config['DATABASE']['port'])
-
 gen = string.ascii_letters + string.digits + string.ascii_uppercase
 key = ''.join(random.choice(gen) for i in range(12))
 
@@ -52,6 +50,7 @@ def token_required(f):
             return jsonify({'message': 'token is invalid'})
         return f(*args, **kwargs)
     return decorated
+
 
 
 

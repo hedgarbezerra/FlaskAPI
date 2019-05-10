@@ -73,6 +73,7 @@ def delete_user(id):
     else:
         return jsonify({'message': 'unable to delete', 'data':{}}), 404
 
+
 def user_by_username(username):
     try:
         return User.User.query.filter(User.User.username == username).one()

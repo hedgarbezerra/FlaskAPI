@@ -1,15 +1,11 @@
 import random
 import string
 from werkzeug.security import check_password_hash, generate_password_hash
-gen = string.ascii_letters + string.digits + string.ascii_uppercase
+import requests
+from pprint import pprint
+import json
 
-key = ''.join(random.choice(gen) for i in range(15))
-#print(key)
-
-passdb = '123'
-userdb = 'hedgar'
-hashdb = generate_password_hash(passdb)
-passauth = '123'
-useratuh = ''
-
-print(check_password_hash(hashdb, passauth))
+url = 'https://flask-api200.herokuapp.com/v2/users'
+r = requests.get(url)
+r = r.json()
+pprint(r)
