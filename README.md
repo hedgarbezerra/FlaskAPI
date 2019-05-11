@@ -17,14 +17,14 @@
 [
     {
         "id": 1,
-        "name": "TV",
-        "desc": "TV LG da Sala",
+        "name": "TV  LG da Sala",
+        "type": "TV",
         "gateway": "192.1.68.0.2"
     },
     {
         "id": 2,
         "name": "Porta",
-        "desc": "Controlador Arduino da porta",
+        "type": "Arduino",
         "gateway": "192.168.0.9"
     }
 ]
@@ -39,7 +39,7 @@
 **Argumentos**
 
 - `"name":string` um nome simples
-- `"desc":string` descrição do dispositivo
+- `"type":string` descrição do dispositivo
 - `"gateway":string` o IP local ou Global do controllador do dispositivo(Arduino)
 
 **Response**
@@ -50,7 +50,7 @@
 {
     "id": 1,
     "name": "Lampada da cozinha",
-    "desc": "Switch que conecta a lampada à rede",
+    "type": "Switch",
     "gateway": "192.1.68.0.2"
 }
 ```
@@ -68,7 +68,7 @@
 {
     "id": 1,
     "name": "Lampada da cozinha",
-    "desc": "Switch que conecta a lampada à rede",
+    "type": "Switch",
     "gateway": "192.1.68.0.2"
 }
 ```
@@ -81,7 +81,7 @@
 **Argumentos**
 
 - `"name":string` um nome simples
-- `"desc":string` descrição do dispositivo
+- `"type":string` descrição do dispositivo
 - `"gateway":string` o IP local ou Global do controllador do dispositivo(Arduino)
 
 **Response**
@@ -92,7 +92,7 @@
 {
     "id": 1,
     "name": "Lampada da cozinha",
-    "desc": "Switch que conecta a lampada à rede",
+    "type": "Switch",
     "gateway": "192.1.68.0.2"
 }
 ```
