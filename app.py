@@ -58,19 +58,19 @@ def token_required(f):
 
 @app.route('/v2/login', methods=['GET', 'POST'])
 def login():
-    # TODO: Work on the authentication of login to get the token
     username = request.json['username']
     password = request.json['password']
-    user = UsersView.user_by_username(username)
+    user = user_by_username(username)
     if not user:
-        return jsonify({'message': 'user not found'})
+        return jsonify({'message': 'user not found', 'data': []}), 401
 
     if user and check_password_hash(user.password, password):
-        token = jwt.encode({'username': username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=12)},
+        token = jwt.encode({'username': username, 'exp': datetime.datetime.now() + datetime.timedelta(hours=12)},
                            app.config['SECRET_KEY'])
-        return jsonify({'token': token.decode('UTF-8')})
+        return jsonify({'message': 'Validated successfully', 'token': token.decode('UTF-8'),
+                        'valid until': datetime.datetime.now() + datetime.timedelta(hours=12)})
 
-    return jsonify({'message': 'could not verify'}), 401
+    return jsonify({'message': 'could not verify', 'data': []}), 401
 
 
 """O index além do login será única parte visual da API(Mostrando a documentação)"""

@@ -7,7 +7,7 @@
 
 **Definição/Request**
 
-`GET /v2/devices?token=TOKEN`
+`GET /v3/devices?token=TOKEN`
 
 **Response**
 
@@ -29,12 +29,29 @@
     }
 ]
 ```
+### Filtrando
+`GET /v3/devices?type=TV&&token=TOKEN`
+
+**Response**
+
+- `200 OK` ao ter sucesso
+
+```json
+[
+    {
+        "id": 1,
+        "name": "TV  LG da Sala",
+        "type": "TV",
+        "gateway": "192.1.68.0.2"
+    }
+]
+```
 
 ### Registrando novo dispositivo
 
 **Definição/Request**
 
-`POST /v2/devices?token=`
+`POST /v3/devices?token=`
 
 **Argumentos**
 
@@ -57,7 +74,7 @@
 
 ## Retornar um dispositivo especifico
 
-`GET /v2/devices/<id>?token=TOKEN`
+`GET /v3/devices/<id>?token=TOKEN`
 
 **Response**
 
@@ -76,7 +93,7 @@
 
 ## Atualizar um dispositivo especifico
 
-`PUT /v2/devices/<id>?token=TOKEN`
+`PUT /v3/devices/<id>?token=TOKEN`
 
 **Argumentos**
 
@@ -101,7 +118,7 @@
 
 **Definição**
 
-`DELETE /v2/devices/<id>?token=TOKEN`
+`DELETE /v3/devices/<id>?token=TOKEN`
 
 **Response**
 
@@ -117,7 +134,7 @@
 
 **Definição/Request**
 
-`GET /v2/users`
+`GET /v3/users`
 
 **Response**
 
@@ -143,7 +160,7 @@
 
 **Definição/Request**
 
-`POST /v2/users`
+`POST /v3/users`
 
 **Argumentos**
 
@@ -168,7 +185,7 @@
 
 ## Retornar um usuário especifico
 
-`GET /v2/users/<id>`
+`GET /v3/users/<id>`
 
 **Response**
 
@@ -189,7 +206,7 @@
 
 **Definição/Request**
 
-`PUT /v2/users`
+`PUT /v3/users`
 
 **Argumentos**
 
@@ -216,7 +233,7 @@
 
 **Definição**
 
-`DELETE /v2/users/<id>`
+`DELETE /v3/users/<id>`
 
 **Response**
 
