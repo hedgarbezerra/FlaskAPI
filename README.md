@@ -1,5 +1,6 @@
 # Registro dos dispositivos
 
+### Versão 4
 
 ## How-To
 
@@ -7,7 +8,7 @@
 
 **Definição/Request**
 
-`GET /v3/devices?token=TOKEN`
+`GET /v4/devices?token=TOKEN`
 
 **Response**
 
@@ -19,18 +20,23 @@
         "id": 1,
         "name": "TV  LG da Sala",
         "type": "TV",
-        "gateway": "192.1.68.0.2"
+        "gateway": "192.1.68.0.2",
+        "user_id": 2, 
+        "created_at": "2019-05-16T18:55:21"
     },
     {
         "id": 2,
         "name": "Porta",
         "type": "Arduino",
-        "gateway": "192.168.0.9"
+        "gateway": "192.168.0.9",
+        "user_id": 2, 
+        "created_at": "2019-05-16T18:55:21"
     }
 ]
 ```
+
 ### Filtrando
-`GET /v3/devices?type=TV&&token=TOKEN`
+`GET /v4/devices?type=TV&&token=TOKEN`
 
 **Response**
 
@@ -42,7 +48,9 @@
         "id": 1,
         "name": "TV  LG da Sala",
         "type": "TV",
-        "gateway": "192.1.68.0.2"
+        "gateway": "192.1.68.0.2",
+        "user_id": 2, 
+        "created_at": "2019-05-16T18:55:21"
     }
 ]
 ```
@@ -51,7 +59,7 @@
 
 **Definição/Request**
 
-`POST /v3/devices?token=`
+`POST /v4/devices?token=`
 
 **Argumentos**
 
@@ -68,13 +76,15 @@
     "id": 1,
     "name": "Lampada da cozinha",
     "type": "Switch",
-    "gateway": "192.1.68.0.2"
+    "gateway": "192.1.68.0.2",
+    "user_id": 2, 
+    "created_at": "2019-05-16T18:55:21"
 }
 ```
 
 ## Retornar um dispositivo especifico
 
-`GET /v3/devices/<id>?token=TOKEN`
+`GET /v4/devices/<id>?token=TOKEN`
 
 **Response**
 
@@ -86,14 +96,16 @@
     "id": 1,
     "name": "Lampada da cozinha",
     "type": "Switch",
-    "gateway": "192.1.68.0.2"
+    "gateway": "192.1.68.0.2",
+    "user_id": 2, 
+    "created_at": "2019-05-16T18:55:21"
 }
 ```
 
 
 ## Atualizar um dispositivo especifico
 
-`PUT /v3/devices/<id>?token=TOKEN`
+`PUT /v4/devices/<id>?token=TOKEN`
 
 **Argumentos**
 
@@ -110,7 +122,9 @@
     "id": 1,
     "name": "Lampada da cozinha",
     "type": "Switch",
-    "gateway": "192.1.68.0.2"
+    "gateway": "192.1.68.0.2",
+    "user_id": 2, 
+    "created_at": "2019-05-16T18:55:21"
 }
 ```
 
@@ -118,7 +132,7 @@
 
 **Definição**
 
-`DELETE /v3/devices/<id>?token=TOKEN`
+`DELETE /v4/devices/<id>?token=TOKEN`
 
 **Response**
 
@@ -134,7 +148,7 @@
 
 **Definição/Request**
 
-`GET /v3/users`
+`GET /v4/users`
 
 **Response**
 
@@ -145,14 +159,16 @@
         "username": "hedgar11",
         "password": "jijioqwoiw",
         "name": "Hedgar Bezerra",
-        "email": "uqwehuewqh@gmail.com"
+        "email": "uqwehuewqh@gmail.com",
+       "created_at": "2019-05-16T18:55:21"
   },
   {       
         "id": 1,
         "username": "hedgar11",
         "password": "jijioqwoiw",
         "name": "Hedgar Bezerra",
-        "email": "uqwehuewqh@gmail.com"
+        "email": "uqwehuewqh@gmail.com",
+        "created_at": "2019-05-16T18:55:21"
   } ]
 ```
 
@@ -160,7 +176,7 @@
 
 **Definição/Request**
 
-`POST /v3/users`
+`POST /v4/users`
 
 **Argumentos**
 
@@ -179,13 +195,14 @@
     "id": 3,
     "name": "Hedgar Bezerra",
     "password": "pbkdf2:sha256:150000$NFfLWADt$a59e50fcef4d4e8a11db276ba43fd9df8d622620cf5ff1e1e0cff0216acc0cbf",
-    "username": "hed1"
+    "username": "hed1",
+    "created_at": "2019-05-16T18:55:21"
 }
 ```
 
 ## Retornar um usuário especifico
 
-`GET /v3/users/<id>`
+`GET /v4/users/<id>`
 
 **Response**
 
@@ -198,7 +215,8 @@
     "id": 3,
     "name": "Hedgar Bezerra",
     "password": "pbkdf2:sha256:150000$NFfLWADt$a59e50fcef4d4e8a11db276ba43fd9df8d622620cf5ff1e1e0cff0216acc0cbf",
-    "username": "hed1"
+    "username": "hed1",
+    "created_at": "2019-05-16T18:55:21"
 }
 ```
 
@@ -206,7 +224,7 @@
 
 **Definição/Request**
 
-`PUT /v3/users`
+`PUT /v4/users`
 
 **Argumentos**
 
@@ -225,7 +243,8 @@
     "id": 3,
     "name": "Hedgar Bezerra",
     "password": "pbkdf2:sha256:150000$NFfLWADt$a59e50fcef4d4e8a11db276ba43fd9df8d622620cf5ff1e1e0cff0216acc0cbf",
-    "username": "hed1"
+    "username": "hed1",
+    "created_at": "2019-05-16T18:55:21"
 }
 ```
 
@@ -233,7 +252,7 @@
 
 **Definição**
 
-`DELETE /v3/users/<id>`
+`DELETE /v4/users/<id>`
 
 **Response**
 
@@ -245,11 +264,13 @@
         "username": "hedgar11",
         "password": "jijioqwoiw",
         "name": "Hedgar Bezerra",
-        "email": "uqwehuewqh@gmail.com"
+        "email": "uqwehuewqh@gmail.com",
+        "created_at": "2019-05-16T18:55:21"
 }
 ```
 ## Autenticação por token com servidor JWT
 
+###Sujeito à erros
 `POST /login`
 
 ```json

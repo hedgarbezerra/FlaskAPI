@@ -40,15 +40,15 @@ ma.init_app(app)
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        token = request.args.get('token') # http://localhost:5000/v2/users?token=8Y3873UJWEQ98UY3U
-
+        token = request.args.get('token')
         if not token:
-            return jsonify({'message': 'token is missing'})
+            return jsonify({'message': 'token is missing', 'data': []}), 401
         try:
             data = jwt.decode(token, app.config['SECRET_KEY'])
+            current_user = user_by_username(username=data['username'])
         except:
-            return jsonify({'message': 'token is invalid'})
-        return f(*args, **kwargs)
+            return jsonify({'message': 'token is invalid', 'data': []}), 401
+        return f(current_user, *args, **kwargs)
     return decorated
 
 
@@ -56,27 +56,28 @@ def token_required(f):
 
 # Gerando token com base na Secret key do app e definindo expiração com 'exp'
 
-@app.route('/v2/login', methods=['GET', 'POST'])
+@app.route('/v4/login', methods=['GET', 'POST'])
 def login():
-    username = request.json['username']
-    password = request.json['password']
-    user = user_by_username(username)
+    auth = request.authorization
+    if not auth or not auth.username or not auth.password:
+        return jsonify({'message': 'could not verify', 'WWW-Authenticate': 'Basic auth="Login required"'}), 401
+    user = user_by_username(auth.username)
     if not user:
         return jsonify({'message': 'user not found', 'data': []}), 401
 
-    if user and check_password_hash(user.password, password):
-        token = jwt.encode({'username': username, 'exp': datetime.datetime.now() + datetime.timedelta(hours=12)},
+    if user and check_password_hash(user.password, auth.password):
+        token = jwt.encode({'username': user.username, 'exp': datetime.datetime.now() + datetime.timedelta(hours=12)},
                            app.config['SECRET_KEY'])
         return jsonify({'message': 'Validated successfully', 'token': token.decode('UTF-8'),
                         'valid until': datetime.datetime.now() + datetime.timedelta(hours=12)})
 
-    return jsonify({'message': 'could not verify', 'data': []}), 401
+    return jsonify({'message': 'could not verify', 'WWW-Authenticate': 'Basic auth="Login required"'}), 401
 
 
 """O index além do login será única parte visual da API(Mostrando a documentação)"""
 
 
-@app.route('/v2/', methods=['GET'])
+@app.route('/v4/', methods=['GET'])
 def index():
     # Usa o os para abrir o arquivo README diretamente da raiz do projeto a partir da basedir
     with open(basedir + '/README.md', 'r', encoding='utf-8') as readme:
@@ -93,31 +94,31 @@ def index_redirect():
 """Rotas dos dispositivos(devices)"""
 
 
-@app.route('/v2/devices', methods=['GET'])
+@app.route('/v4/devices', methods=['GET'])
 @token_required
-def get_devices():
-    return DevicesView.get_devices()
+def get_devices(current_user):
+    return DevicesView.get_devices(current_user)
 
 
-@app.route('/v2/devices/<id>', methods=['GET'])
+@app.route('/v4/devices/<id>', methods=['GET'])
 @token_required
-def get_device(id):
-    return DevicesView.get_device(id)
+def get_device(current_user, id):
+    return DevicesView.get_device(current_user, id)
 
 
-@app.route('/v2/devices', methods=['POST'])
+@app.route('/v4/devices', methods=['POST'])
 @token_required
-def post_device():
+def post_device(current_user):
     name = request.json['name']
     desc = request.json['desc']
     gateway = request.json['gateway']
 
-    return DevicesView.post_device(name, desc, gateway)
+    return DevicesView.post_device(name, desc, gateway, current_user)
 
 
-@app.route('/v2/devices/<id>', methods=['PUT'])
+@app.route('/v4/devices/<id>', methods=['PUT'])
 @token_required
-def update_device(id):
+def update_device(current_user, id):
     name = request.json['name']
     desc = request.json['desc']
     gateway = request.json['gateway']
@@ -126,9 +127,9 @@ def update_device(id):
     return data
 
 
-@app.route('/v2/devices/<id>', methods=['DELETE'])
+@app.route('/v4/devices/<id>', methods=['DELETE'])
 @token_required
-def delete_device(id):
+def delete_device(current_user, id):
     data = DevicesView.delete_device(id)
     return data
 
@@ -136,17 +137,17 @@ def delete_device(id):
 """Rotas para usuário"""
 
 
-@app.route('/v2/users', methods=['GET'])
+@app.route('/v4/users', methods=['GET'])
 def get_users():
     return UsersView.get_users()
 
 
-@app.route('/v2/users/<id>', methods=['GET'])
+@app.route('/v4/users/<id>', methods=['GET'])
 def get_user(id):
     return UsersView.get_user(id)
 
 
-@app.route('/v2/users', methods=['POST'])
+@app.route('/v4/users', methods=['POST'])
 def post_user():
     username = request.json['username']
     password = request.json['password']
@@ -156,7 +157,7 @@ def post_user():
     return UsersView.post_user(username, password, name, email)
 
 
-@app.route('/v2/users/<id>', methods=['PUT'])
+@app.route('/v4/users/<id>', methods=['PUT'])
 def update_user(id):
     username = request.json['username']
     password = request.json['password']
@@ -166,7 +167,7 @@ def update_user(id):
     return UsersView.update_user(id, username, password, name, email)
 
 
-@app.route('/v2/users/<id>', methods=['DELETE'])
+@app.route('/v4/users/<id>', methods=['DELETE'])
 def delete_user(id):
     return UsersView.delete_user(id)
 

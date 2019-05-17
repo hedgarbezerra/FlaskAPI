@@ -6,14 +6,14 @@ from Models.DB import db, ma
 
 """Importando do arquivo db as variáveis criadas para conexão e serialização do banco"""
 
-
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     password = db.Column(db.String(110), nullable=False)
     name = db.Column(db.String(60), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.datetime.utcnow())
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now())
+    devices = db.relationship('Devices', backref='users', lazy=True)
 
     def __init__(self, username, password, name, email):
         self.username = username
@@ -24,7 +24,7 @@ class Users(db.Model):
 
 class UsersSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'username', 'name', 'email', 'password')
+        fields = ('id', 'username', 'name', 'email', 'password', 'created_at')
 
 
 user_schema = UsersSchema(strict=True)
