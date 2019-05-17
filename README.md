@@ -268,17 +268,16 @@
         "created_at": "2019-05-16T18:55:21"
 }
 ```
-## Autenticação por token com servidor JWT
+
+## Autenticação do token com servidor JWT
 
 ###Sujeito à erros
-`POST /login`
 
-```json
-{
-        "username": "hedgar11",
-        "password": "jijioqwoiw"
-}
-```
+`POST /auth`
+
+**No header do seu JavaScript será necessário passar os dados do usuário.**
+
+***Authorization: 'Basic ' + btoa(username + ':' + password)***
 
 **Response**
 
@@ -287,6 +286,30 @@
 
 ```json
 {
-"token": "QIHWEUkoqwe8291j1ioe2j12jjw9218"
+ "token": "QIHWEUkoqwe8291j1ioe2j12jjw9218.JASJA.WQIUH3uijs0a"
+}
+```
+
+
+## Autenticação de usuários
+
+`POST /login`
+
+**No header do seu JavaScript será necessário passar os dados do usuário.**
+
+***Authorization: 'Basic ' + btoa(username + ':' + password)***
+
+**Response**
+
+- `401 Not Found` caso não exista
+- `200 OK` ao ter sucesso
+
+```json
+{
+        "username": "hedgar11",
+        "password": "WQEJHEUL32HE923UIDÇI3H23U32DUOASO.QDJIO2OQ",
+        "name": "Hedgar Bezerra",
+        "email": "uqwehuewqh@gmail.com",
+        "created_at": "2019-05-16T18:55:21"
 }
 ```

@@ -56,8 +56,9 @@ def token_required(f):
 
 # Gerando token com base na Secret key do app e definindo expiração com 'exp'
 
-@app.route('/v4/login', methods=['GET', 'POST'])
-def login():
+
+@app.route('/v4/auth', methods=['POST'])
+def auth():
     auth = request.authorization
     if not auth or not auth.username or not auth.password:
         return jsonify({'message': 'could not verify', 'WWW-Authenticate': 'Basic auth="Login required"'}), 401
@@ -66,10 +67,9 @@ def login():
         return jsonify({'message': 'user not found', 'data': []}), 401
 
     if user and check_password_hash(user.password, auth.password):
-        token = jwt.encode({'username': user.username, 'exp': datetime.datetime.now() + datetime.timedelta(hours=12)},
+        token = jwt.encode({'username': user.username, 'exp':datetime.datetime.now() + datetime.timedelta(hours=12) },
                            app.config['SECRET_KEY'])
-        return jsonify({'message': 'Validated successfully', 'token': token.decode('UTF-8'),
-                        'valid until': datetime.datetime.now() + datetime.timedelta(hours=12)})
+        return jsonify({'message': 'Validated successfully', 'token': token.decode('UTF-8'), 'valid until': datetime.datetime.now() + datetime.timedelta(hours=12)})
 
     return jsonify({'message': 'could not verify', 'WWW-Authenticate': 'Basic auth="Login required"'}), 401
 
@@ -135,6 +135,24 @@ def delete_device(current_user, id):
 
 
 """Rotas para usuário"""
+
+
+@app.route('/v4/login', methods=['POST'])
+def login():
+    auth = request.authorization
+
+    if not auth or not auth.username or not auth.password:
+        return jsonify({'message': 'could not verify, missing authentication', 'data': []}), 401
+
+    user = user_by_username(auth.username)
+
+    if not user:
+        return jsonify({'message': 'user not found', 'data': []}), 401
+
+    if user and check_password_hash(user.password, auth.password):
+        return jsonify({'message': 'logged in successfully', 'data': user})
+
+    return jsonify({'message': 'could not verify', 'WWW-Authenticate': 'Basic auth="Login required"'}), 401
 
 
 @app.route('/v4/users', methods=['GET'])
