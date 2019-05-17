@@ -57,7 +57,7 @@ def token_required(f):
 # Gerando token com base na Secret key do app e definindo expiração com 'exp'
 
 
-@app.route('/v4/auth', methods=['POST'])
+@app.route('/v5/auth', methods=['POST'])
 def auth():
     auth = request.authorization
     if not auth or not auth.username or not auth.password:
@@ -77,7 +77,7 @@ def auth():
 """O index além do login será única parte visual da API(Mostrando a documentação)"""
 
 
-@app.route('/v4/', methods=['GET'])
+@app.route('/v5/', methods=['GET'])
 def index():
     # Usa o os para abrir o arquivo README diretamente da raiz do projeto a partir da basedir
     with open(basedir + '/README.md', 'r', encoding='utf-8') as readme:
@@ -94,19 +94,19 @@ def index_redirect():
 """Rotas dos dispositivos(devices)"""
 
 
-@app.route('/v4/devices', methods=['GET'])
+@app.route('/v5/devices', methods=['GET'])
 @token_required
 def get_devices(current_user):
     return DevicesView.get_devices(current_user)
 
 
-@app.route('/v4/devices/<id>', methods=['GET'])
+@app.route('/v5/devices/<id>', methods=['GET'])
 @token_required
 def get_device(current_user, id):
     return DevicesView.get_device(current_user, id)
 
 
-@app.route('/v4/devices', methods=['POST'])
+@app.route('/v5/devices', methods=['POST'])
 @token_required
 def post_device(current_user):
     name = request.json['name']
@@ -116,7 +116,7 @@ def post_device(current_user):
     return DevicesView.post_device(name, desc, gateway, current_user)
 
 
-@app.route('/v4/devices/<id>', methods=['PUT'])
+@app.route('/v5/devices/<id>', methods=['PUT'])
 @token_required
 def update_device(current_user, id):
     name = request.json['name']
@@ -127,7 +127,7 @@ def update_device(current_user, id):
     return data
 
 
-@app.route('/v4/devices/<id>', methods=['DELETE'])
+@app.route('/v5/devices/<id>', methods=['DELETE'])
 @token_required
 def delete_device(current_user, id):
     data = DevicesView.delete_device(id)
@@ -137,7 +137,7 @@ def delete_device(current_user, id):
 """Rotas para usuário"""
 
 
-@app.route('/v4/login', methods=['POST'])
+@app.route('/v5/login', methods=['POST'])
 def login():
     auth = request.authorization
 
@@ -155,17 +155,17 @@ def login():
     return jsonify({'message': 'could not verify', 'WWW-Authenticate': 'Basic auth="Login required"'}), 401
 
 
-@app.route('/v4/users', methods=['GET'])
+@app.route('/v5/users', methods=['GET'])
 def get_users():
     return UsersView.get_users()
 
 
-@app.route('/v4/users/<id>', methods=['GET'])
+@app.route('/v5/users/<id>', methods=['GET'])
 def get_user(id):
     return UsersView.get_user(id)
 
 
-@app.route('/v4/users', methods=['POST'])
+@app.route('/v5/users', methods=['POST'])
 def post_user():
     username = request.json['username']
     password = request.json['password']
@@ -175,7 +175,7 @@ def post_user():
     return UsersView.post_user(username, password, name, email)
 
 
-@app.route('/v4/users/<id>', methods=['PUT'])
+@app.route('/v5/users/<id>', methods=['PUT'])
 def update_user(id):
     username = request.json['username']
     password = request.json['password']
@@ -185,7 +185,7 @@ def update_user(id):
     return UsersView.update_user(id, username, password, name, email)
 
 
-@app.route('/v4/users/<id>', methods=['DELETE'])
+@app.route('/v5/users/<id>', methods=['DELETE'])
 def delete_user(id):
     return UsersView.delete_user(id)
 

@@ -8,7 +8,7 @@
 
 **Definição/Request**
 
-`GET /v4/devices?token=TOKEN`
+`GET /v5/devices?token=TOKEN`
 
 **Response**
 
@@ -36,7 +36,7 @@
 ```
 
 ### Filtrando
-`GET /v4/devices?type=TV&&token=TOKEN`
+`GET /v5/devices?type=TV&&token=TOKEN`
 
 **Response**
 
@@ -59,7 +59,7 @@
 
 **Definição/Request**
 
-`POST /v4/devices?token=`
+`POST /v5/devices?token=`
 
 **Argumentos**
 
@@ -84,7 +84,7 @@
 
 ## Retornar um dispositivo especifico
 
-`GET /v4/devices/<id>?token=TOKEN`
+`GET /v5/devices/<id>?token=TOKEN`
 
 **Response**
 
@@ -105,7 +105,7 @@
 
 ## Atualizar um dispositivo especifico
 
-`PUT /v4/devices/<id>?token=TOKEN`
+`PUT /v5/devices/<id>?token=TOKEN`
 
 **Argumentos**
 
@@ -132,7 +132,7 @@
 
 **Definição**
 
-`DELETE /v4/devices/<id>?token=TOKEN`
+`DELETE /v5/devices/<id>?token=TOKEN`
 
 **Response**
 
@@ -148,7 +148,7 @@
 
 **Definição/Request**
 
-`GET /v4/users`
+`GET /v5/users`
 
 **Response**
 
@@ -176,7 +176,7 @@
 
 **Definição/Request**
 
-`POST /v4/users`
+`POST /v5/users`
 
 **Argumentos**
 
@@ -202,7 +202,7 @@
 
 ## Retornar um usuário especifico
 
-`GET /v4/users/<id>`
+`GET /v5/users/<id>`
 
 **Response**
 
@@ -224,7 +224,7 @@
 
 **Definição/Request**
 
-`PUT /v4/users`
+`PUT /v5/users`
 
 **Argumentos**
 
@@ -252,7 +252,7 @@
 
 **Definição**
 
-`DELETE /v4/users/<id>`
+`DELETE /v5/users/<id>`
 
 **Response**
 
