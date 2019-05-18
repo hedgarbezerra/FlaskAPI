@@ -1,6 +1,6 @@
 # Registro dos dispositivos
 
-### Versão 4
+### Versão 5
 
 ## How-To
 
