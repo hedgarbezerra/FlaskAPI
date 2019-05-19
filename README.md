@@ -286,7 +286,8 @@
 
 ```json
 {
- "token": "QIHWEUkoqwe8291j1ioe2j12jjw9218.JASJA.WQIUH3uijs0a"
+ "token": "QIHWEUkoqwe8291j1ioe2j12jjw9218.JASJA.WQIUH3uijs0a",
+ "exp": "Mon, 20 May 2019 10:45:50 GMT"
 }
 ```
 
